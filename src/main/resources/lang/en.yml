@@ -1,0 +1,73 @@
+startup:
+  motd:
+    main:
+      - "                                                                                                    "
+      - "    /$$$$$$$  /$$                                         /$$$$$$$                                  "
+      - "   | $$__  $$| $$                                        | $$__  $$                                 "
+      - "   | $$  \ $$| $$  /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$ | $$  \ $$  /$$$$$$  /$$$$$$$   /$$$$$$$   "
+      - "   | $$$$$$$/| $$ |____  $$| $$  | $$ /$$__  $$ /$$__  $$| $$$$$$$  |____  $$| $$__  $$ /$$_____/   "
+      - "   | $$____/ | $$  /$$$$$$$| $$  | $$| $$$$$$$$| $$  \__/| $$__  $$  /$$$$$$$| $$  \ $$|  $$$$$$    "
+      - "   | $$      | $$ /$$__  $$| $$  | $$| $$_____/| $$      | $$  \ $$ /$$__  $$| $$  | $$ \____  $$   "
+      - "   | $$      | $$|  $$$$$$$|  $$$$$$$|  $$$$$$$| $$      | $$$$$$$/|  $$$$$$$| $$  | $$ /$$$$$$$/   "
+      - "   |__/      |__/ \_______/ \____  $$ \_______/|__/      |_______/  \_______/|__/  |__/|_______/    "
+      - "                            /$$  | $$                                                               "
+      - "                           |  $$$$$$/                                                               "
+      - "                            \______/                                                                "
+      - "                                                                                                    "
+      - "                                                                                                    "
+      - "     PluginInfo:                                                                                    "
+      - "     - Version: {pluginVersion}                                                                     "
+      - ""
+
+
+  database:
+    main:
+      - "                                             "
+      - "       _      _        _                     "
+      - "     | |     | |      | |                    "
+      - "   __| | __ _| |_ __ _| |__   __ _ ___  ___  "
+      - "  / _` |/ _` | __/ _` | '_ \ / _` / __|/ _ \ "
+      - " | (_| | (_| | || (_| | |_) | (_| \__ \  __/ "
+      - "  \__,_|\__,_|\__\__,_|_.__/ \__,_|___/\___| "
+      - "                                             "
+      - "    DatabaseStatus:    {databaseStatus}      "
+      - "                                             "
+      - "    DatabaseInformation:                     "
+      - "    -  DatabaseType:   {databaseType}        "
+      - "    -  DatabaseName:   {databaseName}        "
+      - "    -  Port:           {databasePort}        "
+      - "    -  Host:           {databaseIP}          "
+      - "    UserInformation:                         "
+      - "    - UserName:        {userName}            "
+      - "    - UserPassword:    {userPassword}        "
+      - "                                             "
+    status:
+      online: "&aONLINE"
+      local: "&eLOCAL"
+      offline: "&cOFFLINE"
+      error:
+        sqlite:
+          #FATAL ERRORs
+          unknownHost: "&1ERROR &7- &fUnknown Host &8Exitcodes: 2002, 2003, 2005"
+          corrupted: "&1ERROR &7- &7Corrupted &8Exitcodes: 11"
+          storageEngine: "&1ERROR &7- &fStorage Engine (Full Disk) &8Exitcodes: 13"
+          noPermission: "&1ERROR &7- &7No permission &8Exitcodes: 8"
+          #NORMAL ERRORs
+
+        mysql:
+          #FATAL ERRORs
+          unknownHost: "&1ERROR &7- &fUnknown Host &8Exitcodes: 2002, 2003, 2005"
+          lostConnection: "&1ERROR &7- &Server went down &8Exitcodes: 2006, 2013"
+          #NORMAL ERRORs
+          timedOut: "&1ERROR &7- &fTimed Out &8Exitcodes: 1205, 3204"
+          storageEngine: "&1ERROR &7- &fStorage Engine (Full Disk) &8Exitcodes: 1030"
+          noPermission: "&1ERROR &7- &7No permission &8Exitcodes: 1044, 1045"
+
+
+
+disable:
+  motd:
+    main:
+      - "&fPlayerBans &cSHUTDOWN &fError: &7{error}"
+  error:
+    databaseNotLoaded: ""

@@ -1,0 +1,9 @@
+name: PlayerBans
+prefix: PB
+version: '${version}'
+
+main: com.jakisniekot.playerBans.PlayerBans
+api-version: '26.3'
+load: POSTWORLD
+
+authors: [ JakisNieKot ]
