@@ -52,6 +52,12 @@ lang: en
 # - MYSQL
 # - SQLITE
 #
-databaseType: MYSQL
+databaseType: SQLITE
 database:
-  name: ""
+  host: "localhost"
+  port: 3306
+  name: "db"
+  user: "root"
+  password: "root"
+
+

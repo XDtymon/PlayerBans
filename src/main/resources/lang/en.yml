@@ -1,73 +1,67 @@
-startup:
-  motd:
-    main:
-      - "                                                                                                    "
-      - "    /$$$$$$$  /$$                                         /$$$$$$$                                  "
-      - "   | $$__  $$| $$                                        | $$__  $$                                 "
-      - "   | $$  \ $$| $$  /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$ | $$  \ $$  /$$$$$$  /$$$$$$$   /$$$$$$$   "
-      - "   | $$$$$$$/| $$ |____  $$| $$  | $$ /$$__  $$ /$$__  $$| $$$$$$$  |____  $$| $$__  $$ /$$_____/   "
-      - "   | $$____/ | $$  /$$$$$$$| $$  | $$| $$$$$$$$| $$  \__/| $$__  $$  /$$$$$$$| $$  \ $$|  $$$$$$    "
-      - "   | $$      | $$ /$$__  $$| $$  | $$| $$_____/| $$      | $$  \ $$ /$$__  $$| $$  | $$ \____  $$   "
-      - "   | $$      | $$|  $$$$$$$|  $$$$$$$|  $$$$$$$| $$      | $$$$$$$/|  $$$$$$$| $$  | $$ /$$$$$$$/   "
-      - "   |__/      |__/ \_______/ \____  $$ \_______/|__/      |_______/  \_______/|__/  |__/|_______/    "
-      - "                            /$$  | $$                                                               "
-      - "                           |  $$$$$$/                                                               "
-      - "                            \______/                                                                "
-      - "                                                                                                    "
-      - "                                                                                                    "
-      - "     PluginInfo:                                                                                    "
-      - "     - Version: {pluginVersion}                                                                     "
-      - ""
+timeStamp: "&f%d%&ed &f%h%&eh &f%m%&em &f%s%&es"
+infiniteMark: "&cEVER"
 
+playerMessages:
+  noReasonMark: "None"
 
-  database:
-    main:
-      - "                                             "
-      - "       _      _        _                     "
-      - "     | |     | |      | |                    "
-      - "   __| | __ _| |_ __ _| |__   __ _ ___  ___  "
-      - "  / _` |/ _` | __/ _` | '_ \ / _` / __|/ _ \ "
-      - " | (_| | (_| | || (_| | |_) | (_| \__ \  __/ "
-      - "  \__,_|\__,_|\__\__,_|_.__/ \__,_|___/\___| "
-      - "                                             "
-      - "    DatabaseStatus:    {databaseStatus}      "
-      - "                                             "
-      - "    DatabaseInformation:                     "
-      - "    -  DatabaseType:   {databaseType}        "
-      - "    -  DatabaseName:   {databaseName}        "
-      - "    -  Port:           {databasePort}        "
-      - "    -  Host:           {databaseIP}          "
-      - "    UserInformation:                         "
-      - "    - UserName:        {userName}            "
-      - "    - UserPassword:    {userPassword}        "
-      - "                                             "
-    status:
-      online: "&aONLINE"
-      local: "&eLOCAL"
-      offline: "&cOFFLINE"
-      error:
-        sqlite:
-          #FATAL ERRORs
-          unknownHost: "&1ERROR &7- &fUnknown Host &8Exitcodes: 2002, 2003, 2005"
-          corrupted: "&1ERROR &7- &7Corrupted &8Exitcodes: 11"
-          storageEngine: "&1ERROR &7- &fStorage Engine (Full Disk) &8Exitcodes: 13"
-          noPermission: "&1ERROR &7- &7No permission &8Exitcodes: 8"
-          #NORMAL ERRORs
-
-        mysql:
-          #FATAL ERRORs
-          unknownHost: "&1ERROR &7- &fUnknown Host &8Exitcodes: 2002, 2003, 2005"
-          lostConnection: "&1ERROR &7- &Server went down &8Exitcodes: 2006, 2013"
-          #NORMAL ERRORs
-          timedOut: "&1ERROR &7- &fTimed Out &8Exitcodes: 1205, 3204"
-          storageEngine: "&1ERROR &7- &fStorage Engine (Full Disk) &8Exitcodes: 1030"
-          noPermission: "&1ERROR &7- &7No permission &8Exitcodes: 1044, 1045"
+# BAN
+  banUsageError: "&7Usage: &f/ban <player> (time) (silent) (reason)"
+  ban: "&7Player &f%target% &7has been &c&lbanned &7for %time% &7with Reason &f%reason% &7by &f%admin%"
+  banScreen:
+    - ""
+    - "&c&lBAN"
+    - ""
+    - "&7Time left: &f%time%"
+    - "&7Reason: &f%reason%"
+    - "&7Banned by: &f%admin%"
+    - ""
+    - "&c&lBan ID: &f%id%"
+    - ""
+  ipBan: "&7Player IP &f%target% &7has been &4&lIP banned &7for %time% &7with Reason &f%reason% &7by &f%admin%"
+  ipBanScreen:
+    - ""
+    - "&4&lIP BAN"
+    - ""
+    - "&7Time left: &f%time%"
+    - "&7Reason: &f%reason%"
+    - "&7Banned by: &f%admin%"
+    - ""
+    - "&c&lBan ID: &f%id%"
+    - ""
+# UNBAN
+  unbanUsageError: "&7Usage: &f/unban <player> <silent>"
+  unban: "&7Player &f%target% &7has been &aunbanned&7!"
+# MUTE
+  muteUsageError: "&7Usage: &f/mute <player> (time) (silent) (reason)"
+  mute: "&7Player &f%target% &7has been &9&lmuted &7for %time% &7with Reason &f%reason% &7by &f%admin%"
+  muteScreen:
+    - ""
+    - "&9&lMUTED"
+    - ""
+    - "&7Time left: &f%time%"
+    - "&7Reason: &f%reason%"
+    - "&7Muted by: &f%admin%"
+    - ""
+    - "&9&lMute ID: &f%id%"
+    - ""
+# UNMUTE
+  unmuteUsageError: "&7Usage: &f/unmute <player> <silent>"
+  unmute: "&7Player &f%target% &7has been &aunmuted&7!"
 
 
 
-disable:
-  motd:
-    main:
-      - "&fPlayerBans &cSHUTDOWN &fError: &7{error}"
-  error:
-    databaseNotLoaded: ""
+# UTIL
+  noPermission: "&cYou don't have access to that command"
+  dbError: "&cAn error with the database has blocked the action, check console"
+  nonExistentPlayer: "&cThis player has never logged on this server"
+  NAN_usedAsTime: "&cWrong timeString input, action cancelled"
+  mainCommandUsage:
+    - "&b&lPlayerBans&7:"
+    - "&8- &f/playerbans reload"
+    - "   &7Reloads the plugin"
+
+  pluginReload: "&aPlugin has been reloaded"
+  getIP: "&f%player%&7's IP: &e%ip%"
+  getIPUsageError: "&7Usage: &f/getip <player>"
+  getUUID: "&f%player%&7's UUID: &e%uuid%"
+  getUUIDUsageError: "&7Usage: &f/getuuid <player>"

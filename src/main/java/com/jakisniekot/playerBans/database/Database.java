@@ -2,17 +2,19 @@ package com.jakisniekot.playerBans.database;
 
 import com.jakisniekot.playerBans.ErrorType;
 import com.jakisniekot.playerBans.PlayerBans;
-import org.bukkit.Bukkit;
+import com.jakisniekot.playerBans.handler.BanHandler;
+import com.jakisniekot.playerBans.handler.IPBanHandler;
+import com.jakisniekot.playerBans.handler.MuteHandler;
+import com.jakisniekot.playerBans.util.SingleConnectionDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
 
-public class DatabaseConnection {
+public class Database {
 
     private PlayerBans plugin;
 
@@ -20,10 +22,22 @@ public class DatabaseConnection {
     private String DB_TYPE;
     private Connection connection;
 
-    public DatabaseConnection(PlayerBans plugin) {
+    private BanHandler banHandler;
+    private MuteHandler muteHandler;
+    private IPBanHandler ipBanHandler;
+
+    public Database(PlayerBans plugin) {
         this.plugin = plugin;
         FileConfiguration config = plugin.getConfig();
         this.DB_TYPE = config.getString("databaseType");
+
+        connect();
+        createTables();
+
+        DataSource ds = new SingleConnectionDataSource(connection);
+        this.banHandler = new BanHandler(ds);
+        this.muteHandler = new MuteHandler(ds);
+        this.ipBanHandler = new IPBanHandler(ds);
     }
 
     public void connect() {
@@ -138,91 +152,56 @@ public class DatabaseConnection {
         return connection;
     }
 
-    public void createTables() {
-
-        String connectors = """
-        CREATE TABLE IF NOT EXISTS connectors (
-            id VARCHAR(64) PRIMARY KEY,
-            max_connections INTEGER NOT NULL DEFAULT 0,
-            allowed_wires VARCHAR(64),
-            blacklist BOOLEAN NOT NULL DEFAULT FALSE,
-            connectorType VARCHAR(64),
-            itemID VARCHAR(64)
-        );
-        """;
-/*
-        String relays = """
-        CREATE TABLE IF NOT EXISTS relays (
-            id VARCHAR(64) PRIMARY KEY,
-            max_connections INTEGER NOT NULL DEFAULT 0
-        );
-        """;
- */
-        String wires = """
-        CREATE TABLE IF NOT EXISTS wires (
-            loc1 VARCHAR(64) NOT NULL,
-            loc2 VARCHAR(64) NOT NULL,
-            watt_transfer INTEGER NOT NULL DEFAULT 0,
-            headBlocks VARCHAR(64),
-            itemID VARCHAR(64),
-            PRIMARY KEY (loc1, loc2)
-        );
-        """;
-
-        try (Statement stmt = getConnection().createStatement()) {
-            stmt.execute(connectors);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try (Statement stmt = getConnection().createStatement()) {
-            stmt.execute(wires);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        addColumnIfMissing("wires", "headBlocks", "TEXT");
-        addColumnIfMissing("wires", "itemID", "VARCHAR(64)");
-        addColumnIfMissing("connectors", "itemID", "VARCHAR(64)");
+    private boolean isSQLite() throws SQLException {
+        return getConnection().getMetaData()
+                .getDatabaseProductName()
+                .equalsIgnoreCase("SQLite");
     }
 
-    private void addColumnIfMissing(String table, String column, String type) {
-
+    public void createTables() {
         try {
-            boolean exists;
-
-            if (Objects.equals(DB_TYPE, "MYSQL")) {
-                try (PreparedStatement ps = connection.prepareStatement(
-                        "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?")) {
-                    ps.setString(1, table);
-                    ps.setString(2, column);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        rs.next();
-                        exists = rs.getInt(1) > 0;
-                    }
-                }
-            } else {
-                // SQLite
-                try (Statement stmt = connection.createStatement();
-                     ResultSet rs = stmt.executeQuery("PRAGMA table_info(" + table + ")")) {
-                    exists = false;
-                    while (rs.next()) {
-                        if (rs.getString("name").equalsIgnoreCase(column)) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!exists) {
-                try (Statement alter = connection.createStatement()) {
-                    alter.execute("ALTER TABLE " + table + " ADD COLUMN " + column + " " + type);
-                    plugin.getLogger().info("Migrated table " + table + ": added missing column " + column);
-                }
-            }
+            createPunishmentTable("ip_bans", "idx_bans_ip");
+            createPunishmentTable("player_bans", "idx_bans_player");
+            createPunishmentTable("player_mutes", "idx_mutes_player");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createPunishmentTable(String table, String indexName) throws SQLException {
+        boolean sqlite = isSQLite();
+
+        String inlineIndex = sqlite ? "" : ",\n    INDEX " + indexName + " (player_uuid)";
+
+        String createTable = """
+        CREATE TABLE IF NOT EXISTS %s (
+            punishment_id          VARCHAR(12)  NOT NULL PRIMARY KEY,
+            target     CHAR(36)     NOT NULL,
+            issued_at   BIGINT       NOT NULL,
+            duration_ms BIGINT       NOT NULL,
+            reason      VARCHAR(255) NOT NULL,
+            issuer_uuid CHAR(36)     NOT NULL%s
+        )
+        """.formatted(table, inlineIndex);
+
+        try (Statement stmt = getConnection().createStatement()) {
+            stmt.execute(createTable);
+            if (sqlite) {
+                stmt.execute("CREATE INDEX IF NOT EXISTS " + indexName
+                        + " ON " + table + "(target)");
+            }
+        }
+    }
+
+    public IPBanHandler ipBans() {
+        return ipBanHandler;
+    }
+
+    public BanHandler bans() {
+        return banHandler;
+    }
+
+    public MuteHandler mutes() {
+        return muteHandler;
     }
 }

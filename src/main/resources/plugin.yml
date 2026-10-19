@@ -3,7 +3,57 @@ prefix: PB
 version: '${version}'
 
 main: com.jakisniekot.playerBans.PlayerBans
-api-version: '26.3'
+api-version: '26.2'
 load: POSTWORLD
 
+softdepend:
+  - PlaceholderAPI
 authors: [ JakisNieKot ]
+
+permissions:
+  playerbans.ban:
+    default: op
+  playerbans.unban:
+    default: op
+  playerbans.mute:
+    default: op
+  playerbans.unmute:
+    default: op
+  playerbans.reload:
+    default: op
+  playerbans.getip:
+    default: op
+  playerbans.getuuid:
+    default: op
+  playerbans.admin:
+    default: op
+    children:
+      - playerbans.ban
+      - playerbans.unban
+      - playerbans.mute
+      - playerbans.unmute
+      - playerbans.reload
+      - playerbans.getip
+      - playerbans.getuuid
+
+commands:
+  playerbans:
+    description: Main Plugin Command
+  ban:
+    description: Bans people
+    usage: /ban <player> (time) (silent) (reason)
+  mute:
+    description: Mutes people
+    usage: /mute <player> (time) (silent) (reason)
+  unban:
+    description: Unbans people
+    usage: /unban <player> (silent)
+  unmute:
+    description: Unmutes people
+    usage: /unmute <player> (silent)
+  getip:
+    description: Gets IP of a Player
+    usage: /getip <player>
+  getuuid:
+    description: Gets UUID of a Player
+    usage: /getuuid <player>
